@@ -1,11 +1,16 @@
 pico-8 cartridge // http://www.pico-8.com
-version 32
+version 29
 __lua__
-function _draw()
-	print("l")
+function _init()
+
 end
 
-function _update()
+function _update60()
+
+end
+
+function _draw()
+	print(time())
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
