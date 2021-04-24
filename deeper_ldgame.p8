@@ -66,7 +66,7 @@ function _update60()
 		cam.y = 0
 	end
 	--0.5 is speed of cube par frame of desnade
-	cam.deep += 0.1
+	cam.deep += 0.1+(time()/300)
 end
 
 function screenshake()
@@ -90,6 +90,9 @@ function _draw()
 
 	--camera
 	camera(cam.x, cam.y)
+	print("pRONFONDEUR :"..(cam.deep\1).."M", 5, 5)
+	print("rANDOM"..rnd(16),10,10)
+	
 end
 
 
