@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 29
+version 32
 __lua__
 --init
 player = {
@@ -20,7 +20,8 @@ cam = {
 
 anchor = {x=0, y=0}
 
-left,right,up,down,btno,btnx = 0,1,2,3,4,5
+deep = 0
+left,right,up,down,fire1,fire2=0,1,2,3,4,5
 black,dark_blue,dark_purple,dark_green,brown,dark_gray,light_gray,white,red,orange,yellow,green,blue,indigo,pink,peach=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 
 function _init()
@@ -28,9 +29,11 @@ function _init()
 end
 
 -->8
-//update
 
 function _update60()
+	
+	player.vx *= 0.9
+	player.vx *= 0.9
 	if btn(left) then
 		player.vx -= player.speed
 	end
@@ -42,6 +45,9 @@ function _update60()
 	end
 	if btn(down) then
 		player.vy += player.speed
+	end
+	if btn(fire1) then
+		deep += 1
 	end
 	player.vx *= player.friction
 	player.vy *= player.friction
