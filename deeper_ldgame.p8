@@ -22,6 +22,7 @@ particles = {}
 
 deep = 0
 anchor = {x=0, y=0}
+explode = false
 
 left,right,up,down,btno,btnx = 0,1,2,3,4,5
 black,dark_blue,dark_purple,dark_green,brown,dark_gray,light_gray,white,red,orange,yellow,green,blue,indigo,pink,peach=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
@@ -57,6 +58,9 @@ function _update60()
 	destroy_x1 = (anchor.x) \ 8
 	destroy_y1 = anchor.y \ 8+(deep)
 	destroy_x2 = (anchor.x + 8) \ 8
+	if mget(destroy_x1, destroy_y1)==10 then
+		explode = true
+	end
 	mset(destroy_x1, destroy_y1, 0)
 	mset(destroy_x2, destroy_y1, 0)
 
@@ -70,19 +74,33 @@ function _update60()
 
 	--particles
 	for i in all(particles) do
-		i.r -= 1
-		i.frame += 1
+		i.delay -= 1
+		if i.delay == 0 then
+			sfx(0)
+		elseif i.delay < 0 then
+			i.r -= 1
+			i.frame += 1
+			if i.r <= 0 then
+				del(particles, i)
+			end
+		end
 	end
-	if btnp(btnx) then
-		screenshake(4)
-		add(particles, {
-			x = anchor.x, 
-			y = anchor.y,
-			r = 8,
-			frame = 0
-			anim = {black, white, yellow, orange, red, red, light_gray, 
-			light_gray, light_gray, light_gray, dark_gray, dark_gray},
-		})
+	if explode or btnp(btnx) then
+		explode = false
+		screenshake(3)
+		for i=0, 4 do
+			spread = 10
+			add(particles, {
+				x = anchor.x + random(-spread, spread), 
+				y = anchor.y + random(-spread, spread),
+				delay = random(0, 5),
+				r = random(10, 20),
+				frame = 0,
+				anim = {black, white, white, yellow, orange, red, light_gray, 
+				light_gray, dark_gray, dark_gray, dark_gray, dark_gray, dark_gray, 
+				dark_gray, dark_gray, dark_gray},
+			})
+		end
 	end
 
 	--0.5 is speed of cube par frame of desnade
@@ -114,7 +132,9 @@ function _draw()
 
 	--particles
 	for i in all(particles) do
-		circfill(i.x, i.y, i.r)
+		if i.delay < 0 then
+			circfill(i.x, i.y, i.r, i.anim[i.frame])
+		end
 	end
 
 	--camera
@@ -286,3 +306,5 @@ __map__
 04040404040409090909090a0a0a0a0a0a0a0000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0404040404040404040404040404040404040000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0404040404040404040404040404040404040001010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+__sfx__
+0101000013151102520d4541625314552131550f3510d452136451614113344106451613413335154310e6320e23416326136230e62415626106210d62413622156160e611106140d6151361115612136150e613
