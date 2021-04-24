@@ -10,17 +10,17 @@ player = {
 	speed = 0.3,
 	friction = 0.8,
 	gravity = 0,
-	life = 3,
+	life = 31000,
 }
 
 cam = {
 	x = 0,
 	y = 0,
+	deep = 0
 }
 
 particles = {}
 
-deep = 0
 anchor = {x=0, y=0}
 explode = false
 
@@ -106,7 +106,7 @@ function _update60()
 	end
 
 	--0.5 is speed of cube par frame of desnade
-	deep += 0.1
+	cam.deep += 0.1+(time()/300)
 end
 
 function screenshake(i)
@@ -122,8 +122,9 @@ end
 --draw 
 
 function _draw()
-	cls(black)
-	map(0,deep, 0,0,16,16)
+	cls(blue)
+	map(0,(cam.deep+63)%64, 0,(((cam.deep%1)*8)*-1),16,17)
+	map(0,cam.deep%64, 0,(((cam.deep%1)*8)*-1),16,17)
 
 	--player 
 	for i=0, player.y\8 do
@@ -141,6 +142,21 @@ function _draw()
 
 	--camera
 	camera(cam.x, cam.y)
+	
+	--camera(cam.x, cam.y)
+	--mset(rnd(16), cam.deep + 16, 1)
+	for i=0,16 do
+		if rnd(20)\1==1 then
+			mset(i,cam.deep,1)
+		end
+	end
+
+	--debufg var
+	print("life: " .. player.life, 4, 19, white)
+	print("deep: " .. cam.deep, 4, 25, white)
+	print(flr(5.512+0.5),4,31,white)
+	print("pRONFONDEUR :"..(cam.deep\1).."M", 5, 5)
+	print("rANDOM"..rnd(16),4,12)
 	print(deep, 10, 10)
 	print(random(-2,3), 10, 10+8, white)
 end
