@@ -16,11 +16,11 @@ player = {
 cam = {
 	x = 0,
 	y = 0,
+	deep = 0
 }
 
 anchor = {x=0, y=0}
 
-deep = 0
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 black,dark_blue,dark_purple,dark_green,brown,dark_gray,light_gray,white,red,orange,yellow,green,blue,indigo,pink,peach=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 
@@ -55,7 +55,7 @@ function _update60()
 	--for all(anchors) do
 	anchor.x, anchor.y = player.x - 4, player.y + 14
 	destroy_x1 = (anchor.x + 4) \ 8
-	destroy_y1 = anchor.y \ 8+(deep)
+	destroy_y1 = anchor.y \ 8+(cam.deep)
 	destroy_x2 = (anchor.x + 12) \ 8
 	if mget(destroy_x1, destroy_y1)!=0 then--or mget(destroy_x2, destroy_y1)!=0 then
 		cam.x = rnd({-1.5,1.5})
@@ -72,7 +72,7 @@ function _update60()
 		cam.y = 0
 	end
 	--0.5 is speed of cube par frame of desnade
-	deep += 0.1
+	cam.deep += 0.1
 end
 
 function screenshake()
@@ -85,7 +85,7 @@ end
 
 function _draw()
 	cls(black)
-	map(0,deep, 0,0,16,16)
+	map(0,cam.deep, 0,((cam.deep%1)*8)*-1,16,17)
 
 	--player 
 	for i=0, player.y\8 do
@@ -96,7 +96,6 @@ function _draw()
 
 	--camera
 	camera(cam.x, cam.y)
-	print(deep, 10, 10)
 end
 
 
