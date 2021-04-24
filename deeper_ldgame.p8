@@ -10,11 +10,11 @@ player = {
 	vy = 0,
 	speed = 0.3,
 	friction = 0.8,
-	gravity = 0, life = 31000
+	gravity = 0, life = 5
 }
 
 cam = { x = 0, y = 0, deep = 0 }
-
+agmentationvalue = 0
 particles = {}
 
 anchor = {x=0, y=0}
@@ -31,6 +31,9 @@ end
 --update
 
 function _update60()
+	if (player.life <= 0) then
+		return
+	end
 	if btn(left) then
 		player.vx -= player.speed
 	end
@@ -45,7 +48,9 @@ function _update60()
 	end
 	player.vx *= player.friction
 	player.vy *= player.friction
-	player.x += player.vx
+	if ( 4 <= player.x+player.vx and player.x+player.vx <=116) then
+		player.x += player.vx
+	end
 	player.y += player.vy
 
 	--anchors
@@ -59,11 +64,12 @@ function _update60()
 	targetblock2 = mget(destroy_x2, destroy_y1)
 	if targetblock1 == 10 or targetblock2 == 10 then
 		explode = true
+		
 	end
 	mset(destroy_x1, destroy_y1, 0)
 	mset(destroy_x2, destroy_y1, 0)
 
-	--camerad
+	--camera
 	if(rnd({0,1})==0) cam.x *= -0.8
 	if(rnd({0,1})==0) cam.y *= -0.8
 	if abs(cam.x)<1 or abs(cam.y)<1 then
@@ -100,6 +106,7 @@ function _update60()
 				dark_gray, dark_gray, dark_gray},
 			})
 		end
+		player.life -=1
 	end
 	
 	--if (btn(btno)) then
@@ -112,10 +119,14 @@ function _update60()
 	--end
 	--0.5 is speed of cube par frame of desnade
 	--cam.deep += 0.1+(time()/300)
-	cam.deep += 1 --(((cam.deep+0.11)*10)\1)/10 --+(time()/3000)
-	if (cam.deep%8)==0 and cam.deep!=0 then
-		lock = true
+	--Dessante speed
+	descnetespeed = 1+(time()/30)
+	cam.deep += descnetespeed 
+	agmentationvalue += descnetespeed -- SI VOUS COMPRENEZ PAS CE CODE C4EST NORMAL
+
+	if agmentationvalue >= 8 then
 		setnew(cam.deep\8)
+		agmentationvalue -= 8
 	end
 end
 
@@ -134,7 +145,7 @@ end
 function _draw()
 	cls(blue)
 	--map(0,cam.deep, 0,(((cam.deep%1)*8)*-1),16,17)
-	map(0,0,0,0,16,16)
+	map(0,0,0,(cam.deep\1)%8*-1,16,16)
 
 	--player 
 	for i=0, player.y\8 do
@@ -163,11 +174,14 @@ function _draw()
 	--end
 	
 	--debufg var
-	--print("rANDOM"..rnd(16),3,108)
-	print("life: " .. player.life, 3, 114, white)
+	--print(cam.deep%8*-1 ,3,108)
+	print("vITTESSE: "..((descnetespeed*100)\1/10).."KM/H",3,108, white)
+	print("vIE: " .. player.life, 3, 114, white)
 	print("pRONFONDEUR :"..(cam.deep\1).."M", 3, 120, white)
+	print(player.x+player.vx, 5,5,black)
 end
 
+--[[
 function no_update()
 	if (btn(down)) then
 		cam.deep += 1 --(((cam.deep+0.11)*10)\1)/10 --+(time()/3000)
@@ -182,14 +196,11 @@ end
 function no_draw()
 	cls(red)
 	map(0,0,0,0,16,16)
-	--rectfill(0,0,32,32,yellow)
-	--rectfill(0,16,32,16,black)
-	--rectfill(16,0,16,32,black)
-	--minimap_debug()
 	print(cam.deep, 5, 120, white)
 	print(cam.deep/8\1,5,114,white)
 end
-
+]]
+--MODIFICATION DE LA MAP CHAQUE 8 PIXEL
 function setnew(n)
 	for i=0,16 do 
 		for j=0,16 do
@@ -198,12 +209,17 @@ function setnew(n)
 	end
 	for i=0,16 do
 		mset(i,16, 0)
-		if random(1,4) == 1 then
+		random_clock = random(1,100) 
+		if random_clock < 25 then
 			mset(i,16,1)
+		end
+		if random_clock == 26 then
+			mset(i,16,10)
 		end
 	end
 end
 
+--GENERATION DE LA PREMIER MAP
 function firstgenerationmap()
 	for i=0,16 do 
 		for j=0,17 do
