@@ -10,7 +10,7 @@ player = {
 	speed = 0.3,
 	friction = 0.8,
 	gravity = 0,
-	life = 3,
+	life = 31000,
 }
 
 cam = {
@@ -86,8 +86,9 @@ end
 --draw 
 
 function _draw()
-	cls(black)
-	map(0,cam.deep, 0,((cam.deep%1)*8)*-1,16,17)
+	cls(blue)
+	map(0,(cam.deep+63)%64, 0,(((cam.deep%1)*8)*-1),16,17)
+	map(0,cam.deep%64, 0,(((cam.deep%1)*8)*-1),16,17)
 
 	--player 
 	for i=0, player.y\8 do
@@ -98,14 +99,21 @@ function _draw()
 
 	--camera
 	camera(cam.x, cam.y)
-	print("pRONFONDEUR :"..(cam.deep\1).."M", 5, 5)
-	print("rANDOM"..rnd(16),10,10)
 	
 	--camera(cam.x, cam.y)
-	mset(rnd(16), cam.deep + 16, 1)
-	print("life: " .. player.life, 4, 4, white)
-	print("deep: " .. cam.deep, 4, 12, white)
-	print("rnd: " .. rnd(16), 4, 20, white)
+	--mset(rnd(16), cam.deep + 16, 1)
+	for i=0,16 do
+		if rnd(20)\1==1 then
+			mset(i,cam.deep,1)
+		end
+	end
+
+	--debufg var
+	print("life: " .. player.life, 4, 19, white)
+	print("deep: " .. cam.deep, 4, 25, white)
+	print(flr(5.512+0.5),4,31,white)
+	print("pRONFONDEUR :"..(cam.deep\1).."M", 5, 5)
+	print("rANDOM"..rnd(16),4,12)
 end
 
 
