@@ -34,6 +34,9 @@ end
 --update
 
 function _update60()
+	if player.life <= 0 then
+		return
+	end
 	if btn(left) then
 		player.vx -= player.speed
 	end
@@ -57,6 +60,11 @@ function _update60()
 	destroy_x1 = (anchor.x + 4) \ 8
 	destroy_y1 = anchor.y \ 8+(deep)
 	destroy_x2 = (anchor.x + 12) \ 8
+	if mget(destroy_x1, destroy_y1) != 0 then
+		player.life -= 1
+	end
+	
+
 	mset(destroy_x1, destroy_y1, 0)
 	mset(destroy_x2, destroy_y1, 0)
 
@@ -97,7 +105,11 @@ function _draw()
 	--camera
 	camera(cam.x, cam.y)
 	print(deep, 10, 10)
-	print(particles, 10, 20)
+	--camera(cam.x, cam.y)
+	mset(rnd(16), cam.deep + 16, 1)
+	print("life: " .. player.life, 4, 4, white)
+	print("deep: " .. cam.deep, 4, 12, white)
+	print("rnd: " .. rnd(16), 4, 20, white)
 end
 
 
