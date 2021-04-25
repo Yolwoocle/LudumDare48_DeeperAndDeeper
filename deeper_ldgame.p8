@@ -51,6 +51,11 @@ function _update60()
 	if ( 4 <= player.x+player.vx and player.x+player.vx <=116) then
 		player.x += player.vx
 	end
+	if (player.x+player.vx > 116) then
+		player.vx = 0
+		player.x = 116
+	end
+	
 	player.y += player.vy
 
 	--anchors
@@ -58,7 +63,7 @@ function _update60()
 	anchor.x, anchor.y = player.x, player.y + 14
 	destroy_x1 = (anchor.x) \ 8
 	--destroy_y1 = (anchor.y \ 8)+((cam.deep\64))
-	destroy_y1 = (anchor.y \8)
+	destroy_y1 = flr((anchor.y /8)+0.5)
 	destroy_x2 = (anchor.x + 8) \ 8
 	targetblock1 = mget(destroy_x1, destroy_y1)
 	targetblock2 = mget(destroy_x2, destroy_y1)
@@ -174,7 +179,7 @@ function _draw()
 	--end
 	
 	--debufg var
-	--print(cam.deep%8*-1 ,3,108)
+	print(destroy_y1 ,3,100)
 	print("vITTESSE: "..((descnetespeed*100)\1/10).."KM/H",3,108, white)
 	print("vIE: " .. player.life, 3, 114, white)
 	print("pRONFONDEUR :"..(cam.deep\1).."M", 3, 120, white)
