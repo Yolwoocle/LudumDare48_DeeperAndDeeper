@@ -33,6 +33,7 @@ end
 function _update60()
 	if (player.life <= 0) then
 		return
+
 	end
 	if btn(left) then
 		player.vx -= player.speed
@@ -55,8 +56,15 @@ function _update60()
 		player.vx = 0
 		player.x = 116
 	end
+	if ( 4 <= player.y+player.vy and player.y+player.vy <=116) then
+		player.y += player.vy
+	end
+	if (player.y+player.vy > 116) then
+		player.vy = 0
+		player.y = 116
+	end
 	
-	player.y += player.vy
+	--player.y += player.vy
 
 	--anchors
 	--for all(anchors) do
@@ -125,7 +133,7 @@ function _update60()
 	--0.5 is speed of cube par frame of desnade
 	--cam.deep += 0.1+(time()/300)
 	--Dessante speed
-	descnetespeed = 1+(time()/30)
+	descnetespeed = 1+(time()/50)
 	cam.deep += descnetespeed 
 	agmentationvalue += descnetespeed -- SI VOUS COMPRENEZ PAS CE CODE C4EST NORMAL
 
@@ -179,11 +187,9 @@ function _draw()
 	--end
 	
 	--debufg var
-	print(destroy_y1 ,3,100)
 	print("vITTESSE: "..((descnetespeed*100)\1/10).."KM/H",3,108, white)
 	print("vIE: " .. player.life, 3, 114, white)
 	print("pRONFONDEUR :"..(cam.deep\1).."M", 3, 120, white)
-	print(player.x+player.vx, 5,5,black)
 end
 
 --[[
