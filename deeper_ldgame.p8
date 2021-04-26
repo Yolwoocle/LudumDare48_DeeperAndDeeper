@@ -21,7 +21,7 @@ agmentationvalue = 0
 particles = {}
 blockcolors = {brown, indigo, indigo, orange, green, blue, dark_blue, yellow, pink, dark_gray}
 descnetespeed = 2
-unmute = false
+unmute = true
 
 anchor = {x=0, y=0}
 explode = false
@@ -109,16 +109,15 @@ function _update60()
 		end
 
 		--particles
-		for i in all(particles) do
-			i.delay -= 1
-			if i.delay == 0 then
-				
-			elseif i.delay < 0 then
-				i.r -= 1
-				i.frame += 1
-				if i.r <= 0 then
-					del(particles, i)
-				end
+	for i in all(particles) do
+		i.delay -= 1
+		if i.delay == 0 then
+			
+		elseif i.delay < 0 then
+			i.r -= 1
+			i.frame += 1
+			if i.r <= 0 then
+				del(particles, i)
 			end
 		end
 	end
@@ -150,30 +149,20 @@ function _update60()
 			elseif targetblockmax <= 9 then
 				sfx(57)
 			end
-			player.life -=1
 		end
-		if blockdestroy then
-			blockdestroy = false
-			if unmute then
-				if targetblockmax <= 3 then
-					sfx(9)
-				elseif targetblockmax <= 9 then
-					sfx(8)
-				end
-			end
-			for i=0, 7 do
-				add(particles, {
-					x = anchor.x + random(-8, 8), 
-					y = anchor.y + random(-3, 3),
-					delay = random(0, 5),
-					speed = 1,
-					r = random(5, 10),
-					frame = 0,
-					anim = {blockcolors[max(targetblock1, targetblock2)]},
-				})
-			end
+		for i=0, 7 do
+			add(particles, {
+				x = anchor.x + random(-8, 8), 
+				y = anchor.y + random(-3, 3),
+				delay = random(0, 5),
+				speed = 1,
+				r = random(5, 10),
+				frame = 0,
+				anim = {blockcolors[max(targetblock1, targetblock2)]},
+			})
 		end
-		
+	end
+
 		--if (btn(btno)) then
 		--	cam.deep += 1 --(((cam.deep+0.11)*10)\1)/10 --+(time()/3000)
 		--	lock = false
