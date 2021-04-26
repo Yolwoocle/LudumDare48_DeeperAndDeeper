@@ -13,15 +13,14 @@ player = {
 	speed = 0.3,
 	friction = 0.8,
 	gravity = 0, 
-	life = 50,
+	life = -2,
 	score = 0,
 }
-
-cam = { x = 0, y = 0, deep = 0 }
+cam = { x = 0, y = 0, deep = 0}
 agmentationvalue = 0
 particles = {}
 blockcolors = {brown, indigo, indigo, orange, green, blue, dark_blue, yellow, pink, dark_gray}
-
+descnetespeed = 2
 unmute = true
 
 anchor = {x=0, y=0}
@@ -39,140 +38,156 @@ end
 function _update60()
 	--player
 	if (player.life < 0) then
-		return
-
-	end
-	if btn(left) then
-		player.vx -= player.speed
-	end
-	if btn(right) then
-		player.vx += player.speed
-	end
-	if btn(up) then
-		player.vy -= player.speed
-	end
-	if btn(down) then
-		player.vy += player.speed
-	end
-	player.vx *= player.friction
-	player.vy *= player.friction
-	if ( 4 <= player.x+player.vx and player.x+player.vx <=116) then
-		player.x += player.vx
-	end
-	if (player.x+player.vx > 116) then
-		player.vx = 0
-		player.x = 116
-	end
-	if ( 4 <= player.y+player.vy and player.y+player.vy <=116) then
-		player.y += player.vy
-	end
-	if (player.y+player.vy > 116) then
-		player.vy = 0
-		player.y = 116
-	end
-	
-	--player.y += player.vy
-
-	--anchors
-	anchor.x, anchor.y = player.x, player.y + 14
-	destroy_x1 = (anchor.x) \ 8
-	destroy_y1 = flr((anchor.y /8)+0.5)
-	destroy_x2 = (anchor.x + 8) \ 8
-	targetblock1 = mget(destroy_x1, destroy_y1)
-	targetblock2 = mget(destroy_x2, destroy_y1)
-	targetblockmax = max(targetblock1, targetblock2)
-
-	if (0 < targetblock1 and targetblock1 <= 9) or 
-	(0 < targetblock2 and targetblock2 <= 9) then
-		blockdestroy = true
-	end
-	if targetblock1 == 10 or targetblock2 == 10 then
-		explode = true
-	end
-	mset(destroy_x1, destroy_y1, 0)
-	mset(destroy_x2, destroy_y1, 0)
-
-	--camera
-	if(rnd({0,1})==0) cam.x *= -0.8
-	if(rnd({0,1})==0) cam.y *= -0.8
-	if abs(cam.x)<1 or abs(cam.y)<1 then
-		cam.x = 0
-		cam.y = 0
-	end
-
-	--particles
-	for i in all(particles) do
-		i.delay -= 1
-		if i.delay == 0 then
-			
-		elseif i.delay < 0 then
-			i.r -= 1
-			i.frame += 1
-			if i.r <= 0 then
-				del(particles, i)
+		if player.life == -2 then
+			if btnp(btnx) then
+				player.life = 5
+			end
+		elseif player.life == -3 then
+			if btnp(btnx) then
+				player.life = -1
+			end
+		else
+			if btnp(btnx) then
+				run()
 			end
 		end
-	end
-	if explode or btnp(btnx) then
-		explode = false
-		screenshake(3)
-		if(unmute) sfx(rnd({0,1,2}))
-		for i=0, 4 do
-			spread = 10
-			add(particles, {
-				x = anchor.x + random(-spread, spread), 
-				y = anchor.y + random(-spread, spread),
-				delay = random(0, 5),
-				speed = 1,
-				r = random(10, 20),
-				frame = 0,
-				anim = {black, white, white, yellow, orange, red, light_gray, 
-				light_gray, dark_gray, dark_gray, dark_gray, dark_gray, dark_gray, 
-				dark_gray, dark_gray, dark_gray},
-			})
+	else
+		if btn(left) then
+			player.vx -= player.speed
 		end
-		player.life -=1
-	end
-	if blockdestroy then
-		blockdestroy = false
-		if unmute then
-			if targetblockmax <= 3 then
-				sfx(9)
-			elseif targetblockmax <= 9 then
-				sfx(8)
+		if btn(right) then
+			player.vx += player.speed
+		end
+		if btn(up) then
+			player.vy -= player.speed
+		end
+		if btn(down) then
+			player.vy += player.speed
+		end
+		player.vx *= player.friction
+		player.vy *= player.friction
+		if ( 4 <= player.x+player.vx and player.x+player.vx <=116) then
+			player.x += player.vx
+		end
+		if (player.x+player.vx > 116) then
+			player.vx = 0
+			player.x = 116
+		end
+		if ( 4 <= player.y+player.vy and player.y+player.vy <=116) then
+			player.y += player.vy
+		end
+		if (player.y+player.vy > 116) then
+			player.vy = 0
+			player.y = 116
+		end
+		
+		--player.y += player.vy
+
+		--anchors
+		anchor.x, anchor.y = player.x, player.y + 14
+		destroy_x1 = (anchor.x) \ 8
+		destroy_y1 = flr((anchor.y /8)+0.5)
+		destroy_x2 = (anchor.x + 8) \ 8
+		targetblock1 = mget(destroy_x1, destroy_y1)
+		targetblock2 = mget(destroy_x2, destroy_y1)
+		targetblockmax = max(targetblock1, targetblock2)
+
+		if (0 < targetblock1 and targetblock1 <= 9) or 
+		(0 < targetblock2 and targetblock2 <= 9) then
+			blockdestroy = true
+		end
+		if targetblock1 == 10 or targetblock2 == 10 then
+			explode = true
+		end
+		mset(destroy_x1, destroy_y1, 0)
+		mset(destroy_x2, destroy_y1, 0)
+
+		--camera
+		if(rnd({0,1})==0) cam.x *= -0.8
+		if(rnd({0,1})==0) cam.y *= -0.8
+		if abs(cam.x)<1 or abs(cam.y)<1 then
+			cam.x = 0
+			cam.y = 0
+		end
+
+		--particles
+		for i in all(particles) do
+			i.delay -= 1
+			if i.delay == 0 then
+				
+			elseif i.delay < 0 then
+				i.r -= 1
+				i.frame += 1
+				if i.r <= 0 then
+					del(particles, i)
+				end
 			end
 		end
-		for i=0, 7 do
-			add(particles, {
-				x = anchor.x + random(-8, 8), 
-				y = anchor.y + random(-3, 3),
-				delay = random(0, 5),
-				speed = 1,
-				r = random(5, 10),
-				frame = 0,
-				anim = {blockcolors[max(targetblock1, targetblock2)]},
-			})
+		if explode or btnp(btnx) then
+			explode = false
+			screenshake(3)
+			if(unmute) sfx(rnd({0,1,2}))
+			for i=0, 4 do
+				spread = 10
+				add(particles, {
+					x = anchor.x + random(-spread, spread), 
+					y = anchor.y + random(-spread, spread),
+					delay = random(0, 5),
+					speed = 1,
+					r = random(10, 20),
+					frame = 0,
+					anim = {black, white, white, yellow, orange, red, light_gray, 
+					light_gray, dark_gray, dark_gray, dark_gray, dark_gray, dark_gray, 
+					dark_gray, dark_gray, dark_gray},
+				})
+			end
+			player.life -=1
 		end
-	end
-	
-	--if (btn(btno)) then
-	--	cam.deep += 1 --(((cam.deep+0.11)*10)\1)/10 --+(time()/3000)
-	--	lock = false
-	--end
-	--if (cam.deep%8)==0 and cam.deep!=0 and not lock then
-	--	lock = true
-	--	setnew(cam.deep\8)
-	--end
-	--0.5 is speed of cube par frame of desnade
-	--cam.deep += 0.1+(time()/300)
-	--Dessante speed
-	descnetespeed = 1+(time()/50)
-	cam.deep += descnetespeed 
-	agmentationvalue += descnetespeed -- SI VOUS COMPRENEZ PAS CE CODE C4EST NORMAL
+		if blockdestroy then
+			blockdestroy = false
+			if unmute then
+				if targetblockmax <= 3 then
+					sfx(9)
+				elseif targetblockmax <= 9 then
+					sfx(8)
+				end
+			end
+			for i=0, 7 do
+				add(particles, {
+					x = anchor.x + random(-8, 8), 
+					y = anchor.y + random(-3, 3),
+					delay = random(0, 5),
+					speed = 1,
+					r = random(5, 10),
+					frame = 0,
+					anim = {blockcolors[max(targetblock1, targetblock2)]},
+				})
+			end
+		end
+		
+		--if (btn(btno)) then
+		--	cam.deep += 1 --(((cam.deep+0.11)*10)\1)/10 --+(time()/3000)
+		--	lock = false
+		--end
+		--if (cam.deep%8)==0 and cam.deep!=0 and not lock then
+		--	lock = true
+		--	setnew(cam.deep\8)
+		--end
+		--0.5 is speed of cube par frame of desnade
+		--cam.deep += 0.1+(time()/300)
+		--Dessante speed
 
-	if agmentationvalue >= 8 then
-		setnew(cam.deep\8)
-		agmentationvalue -= 8
+		descnetespeed = 4/(10000)+descnetespeed
+		cam.deep += descnetespeed
+		agmentationvalue += descnetespeed -- SI VOUS COMPRENEZ PAS CE CODE C4EST NORMAL
+
+		if agmentationvalue >= 8 then
+			setnew(cam.deep\8)
+			agmentationvalue -= 8
+		end
+		if cam.deep >= 32000 then
+			player.life = -3
+		end
 	end
 end
 
@@ -186,48 +201,60 @@ function random(a, b)
 end
 
 -->8
+unmute = true
 --draw 
 
 function _draw()
-	cls(dark_purple)
-	--map(0,cam.deep, 0,(((cam.deep%1)*8)*-1),16,17)
-	map(0,0,0,(cam.deep\1)%8*-1,16,16)
+	if (player.life < 0) then
+		cls(black)
+		if player.life == -2 then
 
-	--player 
-	for i=0, player.y\8 do
-		spr(35, player.x, player.y - i*8 - 8)
-	end
-	spr(36, player.x-4, player.y, 2, 2)
-	spr(33, player.x, player.y - 8)
-
-	--particles
-	for i in all(particles) do
-		if i.delay < 0 then
-			circfill(i.x, i.y, i.r, i.anim[min(i.frame, #i.anim)])
+			print("Start Menu")
+		elseif player.life == -3 then
+			print("GG")
 		end
-	end
+	else
+		cls(dark_purple)
+		--map(0,cam.deep, 0,(((cam.deep%1)*8)*-1),16,17)
+		map(0,0,0,(cam.deep\1)%8*-1,16,16)
 
-	--camera
-	camera(cam.x, cam.y)
+		--player 
+		for i=0, player.y\8 do
+			spr(35, player.x, player.y - i*8 - 8)
+		end
+		spr(36, player.x-4, player.y, 2, 2)
+		spr(33, player.x, player.y - 8)
 
-	--UI
-	for i=0, player.life do
-		print("♥", 128 - 6*i - 8, 3, white)
+		--particles
+		for i in all(particles) do
+			if i.delay < 0 then
+				circfill(i.x, i.y, i.r, i.anim[min(i.frame, #i.anim)])
+			end
+		end
+
+		--camera
+		camera(cam.x, cam.y)
+
+		--UI
+		for i=0, player.life do
+			print("♥", 128 - 6*i - 8, 3, white)
+		end
+		
+		--camera(cam.x, cam.y)
+		--mset(rnd(16), cam.deep + 16, 1)
+		--
+		--for i=0,16 do
+		--	if rnd(20)\1==1 then
+		--		mset(i,cam.deep,1)
+		--	end
+		--end
+		
+		--debufg var
+		print( "Hello"..stat(6), 3, 80, white)
+		print("vITTESSE: "..((descnetespeed*100)\1/10).."KM/H",3,108, white)
+		print("vIE: " .. player.life, 3, 114, white)
+		print("pRONFONDEUR :"..(cam.deep\1), 3, 120, white)
 	end
-	
-	--camera(cam.x, cam.y)
-	--mset(rnd(16), cam.deep + 16, 1)
-	--
-	--for i=0,16 do
-	--	if rnd(20)\1==1 then
-	--		mset(i,cam.deep,1)
-	--	end
-	--end
-	
-	--debufg var
-	print("vITTESSE: "..((descnetespeed*100)\1/10).."KM/H",3,108, white)
-	print("vIE: " .. player.life, 3, 114, white)
-	print("pRONFONDEUR :"..(cam.deep\1).."M", 3, 120, white)
 end
 
 --[[
