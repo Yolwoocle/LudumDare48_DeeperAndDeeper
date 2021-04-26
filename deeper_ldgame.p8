@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 29
+version 32
 __lua__
 --init
 left,right,up,down,btno,btnx = 0,1,2,3,4,5
@@ -21,7 +21,7 @@ agmentationvalue = 0
 particles = {}
 blockcolors = {brown, indigo, indigo, orange, green, blue, dark_blue, yellow, pink, dark_gray}
 descnetespeed = 0.7
-unmute = false
+unmute = true 
 
 gameover = false
 
