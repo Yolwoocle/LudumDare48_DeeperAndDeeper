@@ -50,7 +50,6 @@ function _update60()
 			menu = false
 			if(gameover) run(tostr(highscore))
 		end
-		if(highscore > 0) menu = false
 	else
 		--player
 		if (player.life < 0) then
