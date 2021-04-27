@@ -1,5 +1,5 @@
 pico-8 cartridge // http://www.pico-8.com
-version 32
+version 29
 __lua__
 --init
 left,right,up,down,btno,btnx = 0,1,2,3,4,5
@@ -37,7 +37,6 @@ if (stat(6) != "") highscore = tonum(stat(6))
 
 function _init()
 	firstgenerationmap()
-	if(unmute) music()
 end
 
 -->8
@@ -48,6 +47,7 @@ function _update60()
 		camera(0, 0)
 		if btnp(btnx) then
 			menu = false
+			if(unmute) music()
 			if(gameover) run(tostr(highscore))
 		end
 	else
@@ -135,7 +135,7 @@ function _update60()
 		end
 		if explode or btnp(btnx) then
 			explode = false
-			screenshake(3)
+			if (player.life > 0) screenshake(3)
 			if(unmute) sfx(rnd({54,55,56}))
 			for i=0, 4 do
 				spread = 10
@@ -186,7 +186,10 @@ function _update60()
 		--cam.deep += 0.1+(time()/300)
 		--Dessante speed
 
-		descnetespeed = 4/(10000)+descnetespeed
+		descnetespeed += 2/(10000)
+		if descnetespeed > 3 then
+			descnetespeed = 3.0
+		end
 		cam.deep += descnetespeed
 		agmentationvalue += descnetespeed -- SI VOUS COMPRENEZ PAS CE CODE C4EST NORMAL
 
@@ -243,22 +246,27 @@ function _draw()
 			print("♥", 128 - 6*i - 8, 3, white)
 		end
 		print("score: "..player.score, 3, 3, white)
-		print("depth: "..(flr(cam.deep/10)), 3, 11, white)
+		print("depth: "..(flr(cam.deep/10)) .. " m", 3, 11, white)
 	end
 
 	if menu then
+		camera()
+		
+		if(gameover) rectfill(0, 62, 128, 128, dark_purple)
 		spr(160, 0, 0, 16, 6)
-		print("press ❎ to start", 30, 100, white)
-		print("use arrow keys to move", 20, 108, white)
-		print("a game by yolwoocle & arkanyota", 2, 120, light_gray)
+		print("press ❎ to start", 30, 98, white)
+		print("use arrow keys to move", 20, 105, white)
+		print("a game by yolwoocle & arkanyota", 2, 114, light_gray)
+		print("▤♪▤ music by baharto  ▤♪▤", 2, 121)
 		if gameover then
 			print("game over! :(", 35, 64, white)
 		end
 		if highscore != "" then
-			print("highscore:"..highscore.." score:"..player.score.." depth:"..cam.deep, 10, 90, yellow)
+			print("highscore:"..highscore.." score:"..player.score,10,80, yellow)
+			print("depth:"..(flr(cam.deep/10))..' m', 10, 88, yellow)
 			--print(, 35, 98, yellow)
 		end
-		camera()
+		camera(0, 0)
 	end
 	
 	--camera(cam.x, cam.y)
